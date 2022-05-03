@@ -11,6 +11,7 @@ if [ -z "$PACKAGE_DIR" ]; then
   echo "No path for the package.json passed. Fallbacking to root directory."
 else
   echo "package-dir detected. Using its value."
+  git config --global --add safe.directory "$PACKAGE_DIR"
   cd "$PACKAGE_DIR"
 fi
 
@@ -21,6 +22,7 @@ else
   echo "From-tag detected. Using its value."
   previous_tag=$FROM_TAG
 fi
+echo "From-tag set to $previous_tag"
 
 if [ -z "$TO_TAG" ]; then
   echo "No to-tag passed. Fallbacking to git previous tag."
@@ -29,6 +31,7 @@ else
   echo "To-tag detected. Using its value."
   new_tag=$TO_TAG
 fi
+echo "To-tag set to $new_tag"
 
 if [ -z "$TYPE" ]; then
   echo "No type passed. Fallbacking to unset."
@@ -54,12 +57,7 @@ else
   exclude_types="--exclude $EXCLUDE"
 fi
 
-if [ -z "$ALLOW_UNKNOWN" ]; then
-  echo "Unknown commit types not allowed."
-else
-  echo "Allowing unknown commit types."
-  unknown_commits="--allow-unknown "
-fi
+unknown_commits="--allow-unknown "
 
 # shellcheck disable=SC2086
 changelog=$(generate-changelog "$changelog_type" -t "$previous_tag..$new_tag" ${exclude_types} "$unknown_commits" --file -)
