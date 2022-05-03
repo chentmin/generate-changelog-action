@@ -11,7 +11,7 @@ if [ -z "$PACKAGE_DIR" ]; then
   echo "No path for the package.json passed. Fallbacking to root directory."
 else
   echo "package-dir detected. Using its value."
-  cp "$PACKAGE_DIR" package.json
+  cd "$PACKAGE_DIR"
 fi
 
 if [ -z "$FROM_TAG" ]; then
